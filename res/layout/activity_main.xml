@@ -9,8 +9,59 @@
     tools:context="com.codingchallenge.sendemailrobust.MainActivity" >
 
     <TextView
+        android:id="@+id/lblTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:text="Send Email Robust"
+        android:textSize="18sp"
+    />
+    <EditText 
+        android:id="@+id/txtFrom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+		android:layout_below="@id/lblTitle"
+        android:hint="From"
+        android:singleLine="true"
+        android:inputType="textEmailAddress"
+   	/>
+    <EditText 
+        android:id="@+id/txtTo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtFrom"
+        android:hint="To"
+        android:inputType="textEmailAddress"
+        android:singleLine="false"
+   	/>
+    <EditText 
+        android:id="@+id/txtSubject"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtTo"
+        android:hint="Subject"
+        android:inputType="textEmailSubject"
+        android:singleLine="true"
+   	/>
+    <EditText 
+        android:id="@+id/txtBody"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/txtSubject"
+        android:hint="Body"
+        android:gravity="top"
+        android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
+        android:minLines="5"
+   	/>
+    <Button 
+        android:id="@+id/btnSend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:layout_below="@id/txtBody"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="20dp"
+        android:text="Send"
+        />
 
 </RelativeLayout>
