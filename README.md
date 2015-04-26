@@ -17,3 +17,6 @@ Technical features:
 * Getting email address from contacts is from a snippet found online: https://stackoverflow.com/questions/11669069/get-email-address-from-contact-list
 * Public domain icon from http://www.iconarchive.com/show/blue-bits-icons-by-icojam/mail-arrow-up-icon.html
 
+_Future_
+* Add support for CC and BCC. API already supports it. They would be similiar in function to the TO field
+* Add support for voice dicatation so user can dictate email via voice
