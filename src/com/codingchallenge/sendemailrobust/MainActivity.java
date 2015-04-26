@@ -75,10 +75,8 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 			HashMap<String, String[]> map2 = prepareMap(mTo);
 			
 			//send email
-			//NetworkRequestTask sendEmailTask = new NetworkRequestTask(MainActivity.this);
-			
-			
-			//sendEmailTask.execute(params)
+			NetworkRequestTask sendEmailTask = new NetworkRequestTask(MainActivity.this);			
+			sendEmailTask.execute(map1, map2);
 		}
 	};
 	
@@ -204,5 +202,7 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 	public void responseReceived(String response) {
 		Logger logger = Logger.getLogger("");
 		logger.log(Level.INFO, String.format("Received response: %s", response));
+		
+		Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
 	}
 }

@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
 		android:layout_below="@id/lblTitle"
         android:hint="From"
+        android:text="amit@mangobird.com"
         android:singleLine="true"
         android:inputType="textEmailAddress"
    	/>
@@ -32,6 +33,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/txtFrom"
         android:hint="To"
+        android:text="amit.aggarwal.x@gmail.com"
         android:inputType="textEmailAddress"
         android:singleLine="false"
    	/>
@@ -41,6 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/txtTo"
         android:hint="Subject"
+        android:text="Read"
         android:inputType="textEmailSubject"
         android:singleLine="true"
    	/>
@@ -50,6 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/txtSubject"
         android:hint="Body"
+        android:text="Books are great"
         android:gravity="top"
         android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
         android:minLines="5"
