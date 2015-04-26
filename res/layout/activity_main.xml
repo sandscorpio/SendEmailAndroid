@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:gravity="center"
-        android:text="Send Email Robust"
+        android:text="@string/app_name"
         android:textSize="18sp"
     />
     <EditText 
@@ -22,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 		android:layout_below="@id/lblTitle"
-        android:hint="From"
-        android:text=""
+        android:hint="@string/txtFromHint"
         android:singleLine="true"
         android:inputType="textEmailAddress"
    	/>
@@ -37,9 +36,8 @@
 	        android:id="@+id/txtTo"
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
-	        android:hint="To"
+	        android:hint="@string/txtToHint"
 	        android:inputType="textEmailAddress"
-	        android:singleLine="false"
 	        android:layout_weight="1"
    		/>
         <Button 
@@ -55,8 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/layTo"
-        android:hint="Subject"
-        android:text="Read"
+        android:hint="@string/txtSubjectHint"
         android:inputType="textEmailSubject"
         android:singleLine="true"
    	/>
@@ -65,8 +62,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/txtSubject"
-        android:hint="Body"
-        android:text="Books are great"
         android:gravity="top"
         android:inputType="textMultiLine|textCapSentences|textAutoCorrect"
         android:minLines="5"
@@ -78,7 +73,7 @@
         android:layout_below="@id/txtBody"
         android:layout_alignParentRight="true"
         android:layout_marginTop="20dp"
-        android:text="Send"
+        android:text="@string/btnSend"
         />
 
 </RelativeLayout>

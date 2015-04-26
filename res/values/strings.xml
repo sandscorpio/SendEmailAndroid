@@ -4,5 +4,10 @@
     <string name="app_name">Send Email Robust</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    
+    <string name="txtFromHint">From</string>
+    <string name="txtToHint">To</string>
+    <string name="txtSubjectHint">Subject</string>
+    <string name="btnSend">Send</string>
 
 </resources>
