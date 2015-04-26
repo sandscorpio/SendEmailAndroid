@@ -16,6 +16,12 @@ import org.json.JSONObject;
 
 import android.os.AsyncTask;
 
+/***
+ * NetworkRequestTask submits an email request to our backend API.
+ * It is done in a separate thread so that the GUI thread is not blocked.
+ * @author sandscorpio
+ *
+ */
 public class NetworkRequestTask extends AsyncTask<Map, String, String> {
 	private static final String EMAIL_ENDPOINT = "";
 	
@@ -28,9 +34,16 @@ public class NetworkRequestTask extends AsyncTask<Map, String, String> {
 	
 	@Override
 	protected void onPreExecute() {
-		
 	}
 
+	/***
+	 * Submit email request asynchronously
+	 * 2 maps are expected to be passed: 
+	 *  first contains from, subject, body
+	 *  second containts to addresses
+	 * A HTTP Post request is done to submit the request in JSON
+	 * Any registered listener is notified when response is received
+	 */
     @Override
     protected String doInBackground(Map... maps) {    	
         //parse from, title, body from first map to json
@@ -88,10 +101,15 @@ public class NetworkRequestTask extends AsyncTask<Map, String, String> {
 		}
     }
 
+    /***
+     * Notify any registered listener of response
+     */
     @Override
     protected void onPostExecute(String result) {
         super.onPostExecute(result);
  
-        _requestListener.responseReceived(result);
+        if (_requestListener != null) {
+        	_requestListener.responseReceived(result);
+        }
     }
 }

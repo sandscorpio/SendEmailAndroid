@@ -9,7 +9,7 @@ import android.content.Context;
 import android.util.Patterns;
 
 /**
- * Utility class
+ * Utility class for some helper functions
  */
 public class Utils {
 	

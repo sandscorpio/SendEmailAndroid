@@ -20,6 +20,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+/***
+ * Displays a simple email client
+ * Emails are sent using Send Robust Email API
+ * @author sandscorpio
+ *
+ */
 public class MainActivity extends ActionBarActivity implements INetworkRequestListener {
 	private static final String DEBUG_TAG = "SendEmailRobust";
 	private enum EnumValidateInput {OK, 
@@ -57,6 +63,9 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		setDefaultUI();
 	}
 	
+	/**
+	 * Set FROM field to system email address associated with this user/device (if available)
+	 */
 	private void setDefaultUI() {
 		//set FROM field to system email address associated with this user/device
 		String defaultEmail = Utils.GetDefaultEmailAddress(this);
@@ -65,6 +74,11 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		}
 	}
 	
+	/***
+	 * Send email.
+	 * All input fields must be valid.
+	 * Email will be sent in a separate thread.
+	 */
 	private OnClickListener btnSendClicked = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -78,6 +92,11 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		}
 	};
 	
+	/**
+	 * Returns true if all input fields are valid and submits email request over network
+	 * Returns false otherwise
+	 * @return
+	 */
 	private boolean sendEmailClicked() {
 		EnumValidateInput validateFrom = setFrom();
 		if (validateFrom != EnumValidateInput.OK) {
@@ -113,6 +132,11 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		return true;
 	}
 	
+	/***
+	 * Set FROM
+	 * Returns OK or error
+	 * @return
+	 */
 	private EnumValidateInput setFrom() {
 		String from = mTxtFrom.getText().toString().trim();
 
@@ -127,6 +151,12 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		return EnumValidateInput.OK;
 	}
 	
+	/***
+	 * Set TO
+	 * TO is a comma separated string consisting of 1 or more valid email addresses
+	 * Returns OK or error
+	 * @return
+	 */
 	private EnumValidateInput setTo() {
 		String to = mTxtTo.getText().toString().trim();
 		
@@ -152,6 +182,11 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		return EnumValidateInput.OK;
 	}
 	
+	/***
+	 * Set Subject (may be blank).
+	 * Returns OK or error
+	 * @return
+	 */
 	private EnumValidateInput setSubject() {
 		String subject = mTxtSubject.getText().toString().trim();
 		
@@ -163,6 +198,11 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		return EnumValidateInput.OK;
 	}
 	
+	/***
+	 * Set Body (may be blank).
+	 * Returns OK or error
+	 * @return
+	 */
 	private EnumValidateInput setBody() {
 		String body = mTxtBody.getText().toString().trim();
 		
@@ -174,6 +214,10 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		return EnumValidateInput.OK;
 	}
 	
+	/***
+	 * Helper method to display an error based on invalid input
+	 * @param validateInput
+	 */
 	private void displayError(EnumValidateInput validateInput) {
 		String errorMsg = "";
 		
@@ -195,6 +239,13 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		Toast.makeText(MainActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
 	}
 	
+	/***
+	 * Helper method to put from, subject, and body into a map
+	 * @param from
+	 * @param subject
+	 * @param body
+	 * @return
+	 */
 	private HashMap<String, String> prepareMap(String from, String subject, String body) {
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("from", from);
@@ -203,6 +254,13 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		return map;		
 	}
 	
+	/***
+	 * Helper method to put "to" into a map
+	 * @param from
+	 * @param subject
+	 * @param body
+	 * @return
+	 */
 	private HashMap<String, String[]> prepareMap(String[] to) {
 		HashMap<String, String[]> map = new HashMap<String, String[]>();
 		map.put("to", to);
@@ -223,6 +281,9 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
 	}
 	
+	/***
+	 * Allow user to select a contact and import their email address
+	 */
 	private OnClickListener btnSelectContactClicked = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
@@ -232,6 +293,9 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		}
 	};
 	
+	/***
+	 * Import selected contact's email address into TO field
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
 	{
