@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.ResponseHandler;
 import org.apache.http.client.methods.HttpPost;
@@ -23,15 +25,15 @@ import android.os.AsyncTask;
  *
  */
 public class NetworkRequestTask extends AsyncTask<Map, String, JSONObject> {
-	private static final String EMAIL_ENDPOINT = "";
-	
+	private static final String EMAIL_ENDPOINT = "https://fathomless-eyrie-8907.herokuapp.com/todo/api/v1.0/email";
+
 	private INetworkRequestListener _requestListener;
-	
+
 	public NetworkRequestTask(INetworkRequestListener requestListener) {
 		super();
 		_requestListener = requestListener;
 	}
-	
+
 	@Override
 	protected void onPreExecute() {
 	}
@@ -44,18 +46,18 @@ public class NetworkRequestTask extends AsyncTask<Map, String, JSONObject> {
 	 * A HTTP Post request is done to submit the request in JSON
 	 * Any registered listener is notified when response is received
 	 */
-    @Override
-    protected JSONObject doInBackground(Map... maps) {    	
-        //parse from, title, body from first map to json
-        JSONObject json = new JSONObject(maps[0]);
-        
-        //parse to addresses from second map to json
-        JSONArray jsonTo = new JSONArray();
-        String[] toAddresses = (String[]) maps[1].get("to");
-        for (String toAddress : toAddresses) {
-        	jsonTo.put(toAddress);
-        }
-        try {
+	@Override
+	protected JSONObject doInBackground(Map... maps) {    	
+		//parse from, title, body from first map to json
+		JSONObject json = new JSONObject(maps[0]);
+
+		//parse to addresses from second map to json
+		JSONArray jsonTo = new JSONArray();
+		String[] toAddresses = (String[]) maps[1].get("to");
+		for (String toAddress : toAddresses) {
+			jsonTo.put(toAddress);
+		}
+		try {
 			json.put("to", jsonTo);
 		} catch (JSONException e1) {
 			JSONObject returnJson = new JSONObject();
@@ -66,9 +68,9 @@ public class NetworkRequestTask extends AsyncTask<Map, String, JSONObject> {
 			}
 			return returnJson; 
 		}
-   	
-        //passes the results to a string builder/entity
-        StringEntity se;
+
+		//passes the results to a string builder/entity
+		StringEntity se;
 		try {
 			se = new StringEntity(json.toString());
 		} catch (UnsupportedEncodingException e) {
@@ -80,23 +82,29 @@ public class NetworkRequestTask extends AsyncTask<Map, String, JSONObject> {
 			}
 			return returnJson; 
 		}
-		
-    	//instantiates httpclient to make request
-        DefaultHttpClient httpclient = new DefaultHttpClient();
 
-        //url with the post data
-        HttpPost httpost = new HttpPost(EMAIL_ENDPOINT);
+		//instantiates httpclient to make request
+		DefaultHttpClient httpclient = new DefaultHttpClient();        
 
-        //sets the post request as the resulting string
-        httpost.setEntity(se);
-        
-        //sets a request header so the page receiving the request will know what to do with it
-        httpost.setHeader("Content-type", "application/json");
+		//set credentials
+		httpclient.getCredentialsProvider().setCredentials(
+				AuthScope.ANY,
+				new UsernamePasswordCredentials(Credentials.USERNAME, Credentials.PASSWORD));
 
-        //Handles what is returned from the page 
-        ResponseHandler<String> responseHandler = new BasicResponseHandler();
-        try {
+		//url with the post data
+		HttpPost httpost = new HttpPost(EMAIL_ENDPOINT);
+
+		//sets the post request as the resulting string
+		httpost.setEntity(se);
+
+		//sets a request header so the page receiving the request will know what to do with it
+		httpost.setHeader("Content-type", "application/json");
+
+		//Handles what is returned from the page 
+		ResponseHandler<String> responseHandler = new BasicResponseHandler();
+		try {
 			String returnValue = httpclient.execute(httpost, responseHandler);
+
 			JSONObject returnJson = new JSONObject(returnValue);
 			return returnJson;
 		} catch (ClientProtocolException e) {
@@ -124,17 +132,17 @@ public class NetworkRequestTask extends AsyncTask<Map, String, JSONObject> {
 			}
 			return returnJson;
 		}
-    }
+	}
 
-    /***
-     * Notify any registered listener of response
-     */
-    @Override
-    protected void onPostExecute(JSONObject result) {
-        super.onPostExecute(result);
- 
-        if (_requestListener != null) {
-        	_requestListener.responseReceived(result);
-        }
-    }
+	/***
+	 * Notify any registered listener of response
+	 */
+	@Override
+	protected void onPostExecute(JSONObject result) {
+		super.onPostExecute(result);
+
+		if (_requestListener != null) {
+			_requestListener.responseReceived(result);
+		}
+	}
 }
