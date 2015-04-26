@@ -3,12 +3,12 @@ Send email from your Anroid using our SendEmailRobust API service
 
 This Android app is a client app for sending emails. It uses our SendEmailRobust API which provides a quite reliable means of sending emails, itself backed by two email providers.
 
-Features:
+_Features_
 * A simple interface: FROM, TO, SUBJECT, BODY form and a SEND button
 * Add TO addresses from your Contacts library 
 * FROM field is pre-populated with your email address at launch
 
-Technical features:
+_Technical features_
 * Supports landscape mode only to faciliate typing and simplify implementation 
 * All user input is validated before email is sent
 * Empty subject and body is allowed
