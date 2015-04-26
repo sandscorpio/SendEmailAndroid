@@ -7,8 +7,11 @@
     <!-- Used to communicate with the Robust Email API -->
     <uses-permission android:name="android.permission.INTERNET" />
     
-    <!-- Used to fill in the default email address TO field -->
+    <!-- Used to fill in the default email address FROM field -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    
+    <!-- Used to access contacts list so user can set TO field -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <uses-sdk
         android:minSdkVersion="8"
