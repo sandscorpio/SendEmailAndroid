@@ -223,16 +223,16 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		
 		switch (validateInput) {
 		case FROM_MISSING:
-			errorMsg = "From field missing";
+			errorMsg = getString(R.string.errorFromMissing);
 			break;
 		case FROM_NOT_VALID_EMAIL:
-			errorMsg = "From field is not an email address";
+			errorMsg = getString(R.string.errorFromNotEmail);
 			break;
 		case TO_MISSING:
-			errorMsg = "To field missing";
+			errorMsg = getString(R.string.errorToMissing);
 			break;
 		case TO_NOT_VALID_EMAIL:
-			errorMsg = "All To fields are not valid email address";
+			errorMsg = getString(R.string.errorToNotEmail);
 			break;
 		}
 		

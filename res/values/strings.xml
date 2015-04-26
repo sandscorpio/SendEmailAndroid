@@ -9,5 +9,10 @@
     <string name="txtToHint">To</string>
     <string name="txtSubjectHint">Subject</string>
     <string name="btnSend">Send</string>
+    
+    <string name="errorFromMissing">"From field missing"</string>
+    <string name="errorFromNotEmail">From field is not an email address</string>
+    <string name="errorToMissing">To field missing</string>
+    <string name="errorToNotEmail">All To fields are not valid email address</string>
 
 </resources>
