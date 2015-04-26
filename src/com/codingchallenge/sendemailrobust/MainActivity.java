@@ -15,13 +15,20 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity implements INetworkRequestListener {
-	private enum EnumValidateInput {OK, FROM_MISSING, FROM_NOT_VALID_EMAIL, TO_MISSING, TO_NOT_VALID_EMAIL};
+	private enum EnumValidateInput {OK, 
+									FROM_MISSING, FROM_NOT_VALID_EMAIL, 
+									TO_MISSING, TO_NOT_VALID_EMAIL}
 	
 	private EditText mTxtFrom;
 	private EditText mTxtTo;
 	private EditText mTxtSubject;
 	private EditText mTxtBody;
 	private Button mBtnSend;
+	
+	private String mFrom;
+	private String[] mTo;
+	private String mSubject;
+	private String mBody;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +46,33 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 	private OnClickListener btnSendClicked = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			//validate input
-			EnumValidateInput validateInput = validateInput();
-			if (validateInput != EnumValidateInput.OK) {
-				//input is not valid
-				displayError(validateInput);
+			EnumValidateInput validateFrom = setFrom();
+			if (validateFrom != EnumValidateInput.OK) {
+				displayError(validateFrom);
 				return;
 			}
+			
+			EnumValidateInput validateTo = setTo();
+			if (validateTo != EnumValidateInput.OK) {
+				displayError(validateTo);
+				return;
+			}
+			
+			EnumValidateInput validateSubject = setSubject();
+			if (validateSubject != EnumValidateInput.OK) {
+				displayError(validateSubject);
+				return;
+			}
+			
+			EnumValidateInput validateBody = setBody();
+			if (validateBody != EnumValidateInput.OK) {
+				displayError(validateBody);
+				return;
+			}
+			
+			//package fields into maps
+			HashMap<String, String> map1 = prepareMap(mFrom, mSubject, mBody);
+			HashMap<String, String[]> map2 = prepareMap(mTo);
 			
 			//send email
 			//NetworkRequestTask sendEmailTask = new NetworkRequestTask(MainActivity.this);
@@ -55,23 +82,64 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		}
 	};
 	
-	private EnumValidateInput validateInput() {
-		String from = mTxtFrom.getText().toString();
-		String to = mTxtTo.getText().toString();
-		
+	private EnumValidateInput setFrom() {
+		String from = mTxtFrom.getText().toString().trim();
+
 		if (from.isEmpty()) {
 			return EnumValidateInput.FROM_MISSING;
 		}
 		else if (!Utils.IsEmailAddress(from)) {
 			return EnumValidateInput.FROM_NOT_VALID_EMAIL;
 		}
-		else if (to.isEmpty()) {
+		
+		mFrom = from;
+		return EnumValidateInput.OK;
+	}
+	
+	private EnumValidateInput setTo() {
+		String to = mTxtTo.getText().toString().trim();
+		
+		if (to.isEmpty()) {
 			return EnumValidateInput.TO_MISSING;
 		}
-		else if (!Utils.IsEmailAddress(to)) {
-			return EnumValidateInput.TO_NOT_VALID_EMAIL;
+		else {
+			//check if all TO fields are valid email addresses
+			String[] toAddresses = to.split(",");
+			for (String toAddress : toAddresses) {
+				if (!Utils.IsEmailAddress(toAddress.trim())) {
+					return EnumValidateInput.TO_NOT_VALID_EMAIL;
+				}
+			}
 		}
 		
+		String[] toAddresses = to.split(",");
+		for (String toAddress : toAddresses) {
+			toAddress = toAddress.trim();
+		}
+		mTo = toAddresses;
+		
+		return EnumValidateInput.OK;
+	}
+	
+	private EnumValidateInput setSubject() {
+		String subject = mTxtSubject.getText().toString().trim();
+		
+		if (subject.isEmpty()) {
+			//TODO: display a warning if user really wants empty subject, but it is not an error
+		}
+		
+		mSubject = subject;		
+		return EnumValidateInput.OK;
+	}
+	
+	private EnumValidateInput setBody() {
+		String body = mTxtBody.getText().toString().trim();
+		
+		if (body.isEmpty()) {
+			//TODO: display a warning if user really wants empty body, but it is not an error
+		}
+		
+		mBody = body;		
 		return EnumValidateInput.OK;
 	}
 	
@@ -89,15 +157,24 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 			errorMsg = "To field missing";
 			break;
 		case TO_NOT_VALID_EMAIL:
-			errorMsg = "To field is not an email address";
+			errorMsg = "All To fields are not valid email address";
 			break;
 		}
 		
 		Toast.makeText(MainActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
 	}
 	
-	private HashMap<String, String> prepareMap() {
+	private HashMap<String, String> prepareMap(String from, String subject, String body) {
 		HashMap<String, String> map = new HashMap<String, String>();
+		map.put("from", from);
+		map.put("subject", subject);
+		map.put("body", body);
+		return map;		
+	}
+	
+	private HashMap<String, String[]> prepareMap(String[] to) {
+		HashMap<String, String[]> map = new HashMap<String, String[]>();
+		map.put("to", to);
 		return map;		
 	}
 
