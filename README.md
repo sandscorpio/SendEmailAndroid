@@ -15,4 +15,5 @@ Technical features:
 * Email is sent in a separate thread so GUI thread is not blocked
 * The HTTP POST request code is from a snippet found online: https://stackoverflow.com/questions/6218143/how-to-send-post-request-in-json-using-httpclient
 * Getting email address from contacts is from a snippet found online: https://stackoverflow.com/questions/11669069/get-email-address-from-contact-list
+* Public domain icon from http://www.iconarchive.com/show/blue-bits-icons-by-icojam/mail-arrow-up-icon.html
 
