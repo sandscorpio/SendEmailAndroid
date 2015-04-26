@@ -41,6 +41,15 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		mTxtBody = (EditText) findViewById (R.id.txtBody);
 		mBtnSend = (Button) findViewById (R.id.btnSend);
 		mBtnSend.setOnClickListener(btnSendClicked);
+		
+		setDefaultUI();
+	}
+	
+	private void setDefaultUI() {
+		String defaultEmail = Utils.GetDefaultEmailAddress(this);
+		if (defaultEmail != null) {
+			mTxtFrom.setText(defaultEmail);
+		}
 	}
 	
 	private OnClickListener btnSendClicked = new OnClickListener() {

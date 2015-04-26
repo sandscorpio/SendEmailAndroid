@@ -4,7 +4,11 @@
     android:versionCode="1"
     android:versionName="1.0" >
     
+    <!-- Used to communicate with the Robust Email API -->
     <uses-permission android:name="android.permission.INTERNET" />
+    
+    <!-- Used to fill in the default email address TO field -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <uses-sdk
         android:minSdkVersion="8"

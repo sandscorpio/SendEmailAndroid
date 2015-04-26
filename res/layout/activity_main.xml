@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
 		android:layout_below="@id/lblTitle"
         android:hint="From"
-        android:text="amit@mangobird.com"
+        android:text=""
         android:singleLine="true"
         android:inputType="textEmailAddress"
    	/>
