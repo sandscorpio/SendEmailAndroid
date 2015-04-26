@@ -46,39 +46,50 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 	private OnClickListener btnSendClicked = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
-			EnumValidateInput validateFrom = setFrom();
-			if (validateFrom != EnumValidateInput.OK) {
-				displayError(validateFrom);
-				return;
+			//prevent additional clicks until this click is fully processed
+			mBtnSend.setEnabled(false);
+			
+			if (!sendEmailClicked()) {
+				//unable to send email due to input error
+				mBtnSend.setEnabled(true);
 			}
-			
-			EnumValidateInput validateTo = setTo();
-			if (validateTo != EnumValidateInput.OK) {
-				displayError(validateTo);
-				return;
-			}
-			
-			EnumValidateInput validateSubject = setSubject();
-			if (validateSubject != EnumValidateInput.OK) {
-				displayError(validateSubject);
-				return;
-			}
-			
-			EnumValidateInput validateBody = setBody();
-			if (validateBody != EnumValidateInput.OK) {
-				displayError(validateBody);
-				return;
-			}
-			
-			//package fields into maps
-			HashMap<String, String> map1 = prepareMap(mFrom, mSubject, mBody);
-			HashMap<String, String[]> map2 = prepareMap(mTo);
-			
-			//send email
-			NetworkRequestTask sendEmailTask = new NetworkRequestTask(MainActivity.this);			
-			sendEmailTask.execute(map1, map2);
 		}
 	};
+	
+	private boolean sendEmailClicked() {
+		EnumValidateInput validateFrom = setFrom();
+		if (validateFrom != EnumValidateInput.OK) {
+			displayError(validateFrom);
+			return false;
+		}
+		
+		EnumValidateInput validateTo = setTo();
+		if (validateTo != EnumValidateInput.OK) {
+			displayError(validateTo);
+			return false;
+		}
+		
+		EnumValidateInput validateSubject = setSubject();
+		if (validateSubject != EnumValidateInput.OK) {
+			displayError(validateSubject);
+			return false;
+		}
+		
+		EnumValidateInput validateBody = setBody();
+		if (validateBody != EnumValidateInput.OK) {
+			displayError(validateBody);
+			return false;
+		}
+		
+		//package fields into maps
+		HashMap<String, String> map1 = prepareMap(mFrom, mSubject, mBody);
+		HashMap<String, String[]> map2 = prepareMap(mTo);
+		
+		//send email
+		NetworkRequestTask sendEmailTask = new NetworkRequestTask(MainActivity.this);			
+		sendEmailTask.execute(map1, map2);
+		return true;
+	}
 	
 	private EnumValidateInput setFrom() {
 		String from = mTxtFrom.getText().toString().trim();
@@ -176,30 +187,14 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		return map;		
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
-		if (id == R.id.action_settings) {
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
-	}
-
 	/***
 	 * Received response from server after sending email
 	 */
 	@Override
 	public void responseReceived(String response) {
+		//user can again press send email button 
+		mBtnSend.setEnabled(true);
+		
 		Logger logger = Logger.getLogger("");
 		logger.log(Level.INFO, String.format("Received response: %s", response));
 		
