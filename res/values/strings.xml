@@ -14,5 +14,8 @@
     <string name="errorFromNotEmail">From field is not an email address</string>
     <string name="errorToMissing">To field missing</string>
     <string name="errorToNotEmail">All To fields are not valid email address</string>
+    
+    <string name="sentEmail">Email sent successfully!</string>
+    <string name="sentEmailFailed">Oh no, unable to send email. Try again later.</string>
 
 </resources>

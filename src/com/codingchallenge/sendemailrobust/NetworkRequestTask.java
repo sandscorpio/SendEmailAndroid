@@ -22,7 +22,7 @@ import android.os.AsyncTask;
  * @author sandscorpio
  *
  */
-public class NetworkRequestTask extends AsyncTask<Map, String, String> {
+public class NetworkRequestTask extends AsyncTask<Map, String, JSONObject> {
 	private static final String EMAIL_ENDPOINT = "";
 	
 	private INetworkRequestListener _requestListener;
@@ -45,7 +45,7 @@ public class NetworkRequestTask extends AsyncTask<Map, String, String> {
 	 * Any registered listener is notified when response is received
 	 */
     @Override
-    protected String doInBackground(Map... maps) {    	
+    protected JSONObject doInBackground(Map... maps) {    	
         //parse from, title, body from first map to json
         JSONObject json = new JSONObject(maps[0]);
         
@@ -58,9 +58,13 @@ public class NetworkRequestTask extends AsyncTask<Map, String, String> {
         try {
 			json.put("to", jsonTo);
 		} catch (JSONException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-			return "Error converting json to addresses"; 
+			JSONObject returnJson = new JSONObject();
+			try {
+				returnJson.put("status", -1);
+				returnJson.put("error", "Error converting json to addresses");
+			} catch (JSONException e) {
+			}
+			return returnJson; 
 		}
    	
         //passes the results to a string builder/entity
@@ -68,9 +72,13 @@ public class NetworkRequestTask extends AsyncTask<Map, String, String> {
 		try {
 			se = new StringEntity(json.toString());
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "Error converting json to stringentity"; 
+			JSONObject returnJson = new JSONObject();
+			try {
+				returnJson.put("status", -2);
+				returnJson.put("error", "Error converting json to stringentity");
+			} catch (JSONException e1) {
+			}
+			return returnJson; 
 		}
 		
     	//instantiates httpclient to make request
@@ -89,15 +97,32 @@ public class NetworkRequestTask extends AsyncTask<Map, String, String> {
         ResponseHandler<String> responseHandler = new BasicResponseHandler();
         try {
 			String returnValue = httpclient.execute(httpost, responseHandler);
-			return returnValue;
+			JSONObject returnJson = new JSONObject(returnValue);
+			return returnJson;
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "Unable to make request due to " + e.getMessage();
+			JSONObject returnJson = new JSONObject();
+			try {
+				returnJson.put("status", -3);
+				returnJson.put("error", e.getMessage());
+			} catch (JSONException e1) {
+			}
+			return returnJson;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return "Unable to make request due to " + e.getMessage();
+			JSONObject returnJson = new JSONObject();
+			try {
+				returnJson.put("status", -4);
+				returnJson.put("error", e.getMessage());
+			} catch (JSONException e1) {
+			}
+			return returnJson;
+		} catch (JSONException e) {
+			JSONObject returnJson = new JSONObject();
+			try {
+				returnJson.put("status", -5);
+				returnJson.put("error", "Unable to jsonify response");
+			} catch (JSONException e2) {				
+			}
+			return returnJson;
 		}
     }
 
@@ -105,7 +130,7 @@ public class NetworkRequestTask extends AsyncTask<Map, String, String> {
      * Notify any registered listener of response
      */
     @Override
-    protected void onPostExecute(String result) {
+    protected void onPostExecute(JSONObject result) {
         super.onPostExecute(result);
  
         if (_requestListener != null) {

@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -28,6 +29,8 @@ import android.widget.Toast;
  */
 public class MainActivity extends ActionBarActivity implements INetworkRequestListener {
 	private static final String DEBUG_TAG = "SendEmailRobust";
+	private static final int API_SUCCESS = 200;
+	
 	private enum EnumValidateInput {OK, 
 									FROM_MISSING, FROM_NOT_VALID_EMAIL, 
 									TO_MISSING, TO_NOT_VALID_EMAIL}
@@ -271,14 +274,15 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 	 * Received response from server after sending email
 	 */
 	@Override
-	public void responseReceived(String response) {
+	public void responseReceived(JSONObject response) {
 		//user can again press send email button 
 		mBtnSend.setEnabled(true);
 		
 		Logger logger = Logger.getLogger("");
 		logger.log(Level.INFO, String.format("Received response: %s", response));
 		
-		Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
+		String msg = response.optInt("status") == API_SUCCESS ? getString(R.string.sentEmail) : getString(R.string.sentEmailFailed);
+		Toast.makeText(MainActivity.this, msg, Toast.LENGTH_LONG).show();
 	}
 	
 	/***
