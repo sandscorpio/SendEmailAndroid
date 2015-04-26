@@ -33,6 +33,7 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 	private EditText mTxtSubject;
 	private EditText mTxtBody;
 	private Button mBtnSend;
+	private Button mBtnSelectContact;
 	
 	private String mFrom;
 	private String[] mTo;
@@ -46,16 +47,18 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		
 		mTxtFrom = (EditText) findViewById (R.id.txtFrom);
 		mTxtTo = (EditText) findViewById (R.id.txtTo);
-		mTxtTo.setOnClickListener(txtToClicked);
 		mTxtSubject = (EditText) findViewById (R.id.txtSubject);
 		mTxtBody = (EditText) findViewById (R.id.txtBody);
 		mBtnSend = (Button) findViewById (R.id.btnSend);
 		mBtnSend.setOnClickListener(btnSendClicked);
+		mBtnSelectContact = (Button) findViewById (R.id.btnSelectContact);
+		mBtnSelectContact.setOnClickListener(btnSelectContactClicked);
 		
 		setDefaultUI();
 	}
 	
 	private void setDefaultUI() {
+		//set FROM field to system email address associated with this user/device
 		String defaultEmail = Utils.GetDefaultEmailAddress(this);
 		if (defaultEmail != null) {
 			mTxtFrom.setText(defaultEmail);
@@ -220,7 +223,7 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 		Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
 	}
 	
-	private OnClickListener txtToClicked = new OnClickListener() {
+	private OnClickListener btnSelectContactClicked = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			Intent contactPickerIntent = new Intent(Intent.ACTION_PICK, Email.CONTENT_URI);
@@ -232,51 +235,52 @@ public class MainActivity extends ActionBarActivity implements INetworkRequestLi
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) 
 	{
-		if (resultCode == RESULT_OK) {
-			switch (requestCode) {
-			case RESULT_CONTACTS:
-				Cursor cursor = null;
-				String email = null; 
-				try {
-					Uri result = data.getData();
-					Log.v(DEBUG_TAG, "Got a contact result: " + result.toString());
-
-					// get the contact id from the Uri
-					String id = result.getLastPathSegment();
-					
-					cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
-			                null,
-			                ContactsContract.CommonDataKinds.Email._ID.concat("=?"),
-			                new String[] { id },
-			                null);
-					
-					int emailIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
-
-					// let's just get the first email
-					if (cursor.moveToFirst()) {
-						email = cursor.getString(emailIdx);
-					} 
-				} 
-				catch (Exception e) {
-					Log.e(DEBUG_TAG, "Failed to get email data", e);
-				} 
-				finally {
-					if (cursor != null) {
-						cursor.close();
-					}
-					
-					//append selected email address
-					if (email != null) {
-						String to = mTxtTo.getText().toString();
-						if (!to.isEmpty()) {
-							to += ",";
-						}
-						to += email;
-						mTxtTo.setText(to);
-					}				
-				}
+		switch (requestCode) {
+		case RESULT_CONTACTS:
+			if (resultCode != RESULT_OK) {
 				break;
 			}
+			
+			Cursor cursor = null;
+			String email = null; 
+			try {
+				Uri result = data.getData();
+				
+				// get the contact id from the Uri
+				String id = result.getLastPathSegment();
+				
+				cursor = getContentResolver().query(ContactsContract.CommonDataKinds.Email.CONTENT_URI,
+		                null,
+		                ContactsContract.CommonDataKinds.Email._ID.concat("=?"),
+		                new String[] { id },
+		                null);
+				
+				int emailIdx = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
+
+				// let's just get the first email
+				if (cursor.moveToFirst()) {
+					email = cursor.getString(emailIdx);
+				} 
+			} 
+			catch (Exception e) {
+				Log.e(DEBUG_TAG, "Failed to get email data", e);
+			} 
+			finally {
+				if (cursor != null) {
+					cursor.close();
+				}
+				
+				//append selected email address
+				if (email != null) {
+					String to = mTxtTo.getText().toString();
+					if (!to.isEmpty()) {
+						to += ",";
+					}
+					to += email;
+					mTxtTo.setText(to);
+				}				
+			}
+			break;
 		}
 	}
 }

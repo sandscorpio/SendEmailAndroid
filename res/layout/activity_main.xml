@@ -27,21 +27,34 @@
         android:singleLine="true"
         android:inputType="textEmailAddress"
    	/>
-    <EditText 
-        android:id="@+id/txtTo"
+    <LinearLayout
+        android:id="@+id/layTo"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/txtFrom"
-        android:hint="To"
-        android:text="amit.aggarwal.x@gmail.com"
-        android:inputType="textEmailAddress"
-        android:singleLine="false"
-   	/>
+    	android:layout_height="wrap_content"
+    	android:layout_below="@id/txtFrom"
+    	android:orientation="horizontal">
+        <EditText 
+	        android:id="@+id/txtTo"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:hint="To"
+	        android:inputType="textEmailAddress"
+	        android:singleLine="false"
+	        android:layout_weight="1"
+   		/>
+        <Button 
+	        android:id="@+id/btnSelectContact"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:text="+"
+	        android:layout_weight="0"
+        />
+    </LinearLayout>
     <EditText 
         android:id="@+id/txtSubject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/txtTo"
+        android:layout_below="@id/layTo"
         android:hint="Subject"
         android:text="Read"
         android:inputType="textEmailSubject"
