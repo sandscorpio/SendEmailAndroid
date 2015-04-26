@@ -19,4 +19,4 @@ _Technical features_
 
 _Future_
 * Add support for CC and BCC. API already supports it. They would be similiar in function to the TO field
-* Add support for voice dicatation so user can dictate email via voice
+* Add support for voice dictation so user can dictate email via voice
